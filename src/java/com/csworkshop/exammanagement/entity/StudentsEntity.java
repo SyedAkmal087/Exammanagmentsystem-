@@ -73,8 +73,8 @@ public class StudentsEntity implements Serializable {
     @Size(min = 1, max = 255)
     @Column(name = "password")
     private String password;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "studentId")
-    private List<SchedulesEntity> schedulesEntityList;
+    @OneToMany(mappedBy = "studentId")
+    private List<SeatingPlanEntity> seatingPlanEntityList;
     @JoinColumn(name = "section_id", referencedColumnName = "section_id")
     @ManyToOne
     private SectionsEntity sectionId;
@@ -146,12 +146,12 @@ public class StudentsEntity implements Serializable {
     }
 
     @XmlTransient
-    public List<SchedulesEntity> getSchedulesEntityList() {
-        return schedulesEntityList;
+    public List<SeatingPlanEntity> getSeatingPlanEntityList() {
+        return seatingPlanEntityList;
     }
 
-    public void setSchedulesEntityList(List<SchedulesEntity> schedulesEntityList) {
-        this.schedulesEntityList = schedulesEntityList;
+    public void setSeatingPlanEntityList(List<SeatingPlanEntity> seatingPlanEntityList) {
+        this.seatingPlanEntityList = seatingPlanEntityList;
     }
 
     public SectionsEntity getSectionId() {
