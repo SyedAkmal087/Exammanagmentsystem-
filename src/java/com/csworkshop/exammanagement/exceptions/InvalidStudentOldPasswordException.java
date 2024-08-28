@@ -8,8 +8,8 @@ package com.csworkshop.exammanagement.exceptions;
  *
  * @author Asmat
  */
-public class InvalidOldPasswordException extends Exception {
-      public InvalidOldPasswordException (String msg) {
+public class InvalidStudentOldPasswordException extends Exception {
+      public InvalidStudentOldPasswordException (String msg) {
         super(msg);
     }
     
