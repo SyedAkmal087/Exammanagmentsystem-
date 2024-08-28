@@ -12,7 +12,7 @@ import com.csworkshop.exammanagement.entity.SectionsEntity;
 import com.csworkshop.exammanagement.exceptions.InvalidEmailException;
 import com.csworkshop.exammanagement.exceptions.InvalidStudentNameLengthException;
 import com.csworkshop.exammanagement.exceptions.NullStudentNameException;
-import com.csworkshop.exammanagement.exceptions.InvalidOldPasswordException;
+import com.csworkshop.exammanagement.exceptions.InvalidStudentOldPasswordException;
 import com.csworkshop.exammanagement.exceptions.WeakStudentPasswordException;
 import com.csworkshop.exammanagement.exceptions.StudentNotFoundException;
 import com.csworkshop.exammanagement.entity.StudentsEntity;
@@ -212,12 +212,12 @@ else if( studentName.length()<3){
  
         @Override
         public StudentsEntity UpdateStudentPassword(int studentId, String oldPassword,String newPassword) 
-                throws StudentNotFoundException,InvalidOldPasswordException,WeakStudentPasswordException,InvalidStudentIdException{
+                throws StudentNotFoundException,InvalidStudentOldPasswordException,WeakStudentPasswordException,InvalidStudentIdException{
             StudentsEntity student=findStudentById(studentId);
         if(student!=null){
             
          if (!student.getPassword().equals(oldPassword)) {  
-            throw new InvalidOldPasswordException("Old password is incorrect for Student ID: " + studentId);  
+            throw new InvalidStudentOldPasswordException("Old password is incorrect for Student ID: " + studentId);  
         } 
          if (!isValidPassword(newPassword)) {  
             throw new WeakStudentPasswordException("New password does not meet the strength requirements.");  
