@@ -1,3 +1,4 @@
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/J2EE/EJB30/StatelessEjbClass.java to edit this template
@@ -22,8 +23,8 @@ import com.csworkshop.exammanagement.exceptions.WeakTeacherPasswordException;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-
 
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -40,8 +41,6 @@ public class TeachersSession implements TeachersSessionRemote {
 
    
 
-  
-
     @Override
     public TeachersEntity addTeacher(String name, String phone_num, String email, String password, boolean availability)
             throws NullTeacherNameException, InvalidTeacherNameException, NullTeacherPhoneNoException, InvalidTeacherPhoneNoException,
@@ -49,39 +48,45 @@ public class TeachersSession implements TeachersSessionRemote {
             TeacherAlreadyExistsException {
 
         validateInputs(name, phone_num, email, password, availability);
-
-        if (doesTeacherWithEmailandPhoneNumberExist(email, phone_num)) {
-            throw new TeacherAlreadyExistsException("Teacher already exists.");
-        }
-
-        TeachersEntity teacher = new TeachersEntity();
+TeachersEntity teacher = new TeachersEntity();
+        try {
+            if (doesTeacherWithEmailandPhoneNumberExist(email, phone_num)) {
+                throw new TeacherAlreadyExistsException("Teacher already exists.");
+            }
+        } catch (TeacherNotFoundException ex) {
         teacher.setTeacherName(name);
         teacher.setTeacherPhoneNumber(phone_num);
         teacher.setTeacherEmail(email);
         teacher.setTeacherPassword(password);
         teacher.setAvailability(availability);
         persist(teacher);
-
+        }
         return teacher;
     }
 
-    private boolean doesTeacherWithEmailandPhoneNumberExist(String email, String phone_num) {
-        TeachersEntity existingTeacher = findTeacherByEmailandPhoneNumber(email, phone_num);
+    private boolean doesTeacherWithEmailandPhoneNumberExist(String email, String phone_num) throws TeacherNotFoundException{
+        TeachersEntity existingTeacher;
+        try {
+            existingTeacher = findTeacherByEmailandPhoneNumber(email, phone_num);
+        } catch (TeacherNotFoundException ex) {
+            throw new TeacherNotFoundException("no teacher found ");
+        }
         return existingTeacher != null;
     }
 
-    private TeachersEntity findTeacherByEmailandPhoneNumber(String email, String phone_num) {
+    @Override
+    public TeachersEntity findTeacherByEmailandPhoneNumber(String teacherEmail, String teacherPhoneNumber) throws TeacherNotFoundException {
         //  named query to find a teacher by email and phone number
-        List<TeachersEntity> results = em.createNamedQuery("TeachersEntity.findByEmailAndPhoneNumber", TeachersEntity.class)
-                .setParameter("email", email)
-                .setParameter("phone_num", phone_num)
-                .getResultList();
-
-        if (results.isEmpty()) {
-            return null;
-        } else {
-            return results.get(0);
+        Query qry = em.createQuery("select t from TeachersEntity t where t.teacherEmail = :teacherEmail and t.teacherPhoneNumber = :teacherPhoneNumber");
+        qry.setParameter("teacherEmail", teacherEmail);
+        qry.setParameter("teacherPhoneNumber", teacherPhoneNumber);
+        TeachersEntity teacher;
+        try {
+            teacher = (TeachersEntity) qry.getSingleResult();
+        } catch (NoResultException e) {
+            throw new TeacherNotFoundException("no teacher found ");
         }
+        return teacher;
     }
 
     private void validateInputs(String name, String phone_num, String email, String password, boolean availability)
@@ -116,8 +121,8 @@ public class TeachersSession implements TeachersSessionRemote {
     }
 
     @Override
-    public TeachersEntity findTeacherbyId(int id) 
-    throws InvalidTeacherIdException, TeacherNotFoundException {
+    public TeachersEntity findTeacherbyId(int id)
+            throws InvalidTeacherIdException, TeacherNotFoundException {
         if (id <= 0) {
             throw new InvalidTeacherIdException("ID cannot be zero.");
         }
@@ -130,7 +135,7 @@ public class TeachersSession implements TeachersSessionRemote {
 
     @Override
     public List<TeachersEntity> findTeacherByName(String name)
-        throws InvalidTeacherNameException, NullTeacherNameException, TeacherNotFoundException {
+            throws InvalidTeacherNameException, NullTeacherNameException, TeacherNotFoundException {
         // Check if name is null, empty
         if (name == null || name.isEmpty()) {
             throw new NullTeacherNameException("Name cannot be null, empty.");
@@ -157,7 +162,7 @@ public class TeachersSession implements TeachersSessionRemote {
 
     @Override
     public void removeTeacherById(int teacherId)
-    throws InvalidTeacherIdException, TeacherNotFoundException {
+            throws InvalidTeacherIdException, TeacherNotFoundException {
         // Validate teacherId
         if (teacherId <= 0) {
             throw new InvalidTeacherIdException("ID cannot be zero.");
@@ -174,7 +179,7 @@ public class TeachersSession implements TeachersSessionRemote {
 
     @Override
     public void updateTeacher(int teacherId, String newTeacherName, String newPhone_no, String newEmail, String newPassword, boolean avail)
-    throws InvalidTeacherIdException, NullTeacherNameException, InvalidTeacherNameException, NullTeacherPhoneNoException, InvalidTeacherPhoneNoException,
+            throws InvalidTeacherIdException, NullTeacherNameException, InvalidTeacherNameException, NullTeacherPhoneNoException, InvalidTeacherPhoneNoException,
             NullTeacherEmailException, InvalidTeacherEmailException, NullTeacherPasswordException, WeakTeacherPasswordException, TeacherNotFoundException,
             TeacherNotUpdatedException {
         // Validate the teacher ID
@@ -225,15 +230,36 @@ public class TeachersSession implements TeachersSessionRemote {
         // Return the list of teachers
         return teachers;
     }
-
-    public void persist(Object object) {
-        em.persist(object);
+     private boolean isValidPassword(String password) {    
+    return password != null && password.length() >= 8; // Example rule  
+}  
+ @Override
+        public TeachersEntity UpdateTeacherPassword(int teacherId, String oldPassword,String newPassword) 
+                throws TeacherNotFoundException,InvalidTeacherOldPasswordException,WeakTeacherPasswordException,InvalidTeacherIdException{
+            TeachersEntity teacher=findTeacherbyId(teacherId);
+        if(teacher!=null){
+            
+         if (!teacher.getTeacherPassword().equals(oldPassword)) {  
+            throw new InvalidTeacherOldPasswordException("Old password is incorrect for Student ID: " + teacherId);  
+        } 
+         if (!isValidPassword(newPassword)) {  
+            throw new WeakTeacherPasswordException("New password does not meet the strength requirements.");  
+        }
+            teacher.setTeacherPassword(newPassword);
+            em.merge(teacher);
+        }
+        else{
+            throw new TeacherNotFoundException("No Student Found With ID: "+teacherId);
+            
+        }
+    return teacher;
     }
+  
 
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
 
-   
-
-  
+    public void persist(Object object) {
+        em.persist(object);
+    }
 }

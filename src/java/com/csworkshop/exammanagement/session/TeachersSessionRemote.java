@@ -38,5 +38,9 @@ public interface TeachersSessionRemote {
     public void updateTeacher(int teacherId, String newTeacherName, String newPhone_no, String newEmail, String newPassword, boolean avail) throws InvalidTeacherIdException, NullTeacherNameException, InvalidTeacherNameException, NullTeacherPhoneNoException, InvalidTeacherPhoneNoException, NullTeacherEmailException, InvalidTeacherEmailException, NullTeacherPasswordException, WeakTeacherPasswordException, TeacherNotFoundException, TeacherNotUpdatedException;
 
     public List<TeachersEntity> getAllTeachers() throws TeacherNotFoundException;
+    public TeachersEntity findTeacherByEmailandPhoneNumber(String teacherEmail, String teacherPhoneNumber)throws TeacherNotFoundException;
+    public TeachersEntity UpdateTeacherPassword(int teacherId, String oldPassword,String newPassword) 
+                throws TeacherNotFoundException,InvalidTeacherOldPasswordException,WeakTeacherPasswordException,InvalidTeacherIdException;
+       
 
 }
