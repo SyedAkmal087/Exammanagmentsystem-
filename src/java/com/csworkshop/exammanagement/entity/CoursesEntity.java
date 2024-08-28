@@ -52,8 +52,8 @@ public class CoursesEntity implements Serializable {
     @Size(min = 1, max = 10)
     @Column(name = "course_code")
     private String courseCode;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "courseId")
-    private List<ExamsEntity> examsEntityList;
+    @OneToMany(mappedBy = "courseCode")
+    private List<DateSheetsEntity> dateSheetsEntityList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "courseId")
     private List<EnrollmentsEntity> enrollmentsEntityList;
 
@@ -95,12 +95,12 @@ public class CoursesEntity implements Serializable {
     }
 
     @XmlTransient
-    public List<ExamsEntity> getExamsEntityList() {
-        return examsEntityList;
+    public List<DateSheetsEntity> getDateSheetsEntityList() {
+        return dateSheetsEntityList;
     }
 
-    public void setExamsEntityList(List<ExamsEntity> examsEntityList) {
-        this.examsEntityList = examsEntityList;
+    public void setDateSheetsEntityList(List<DateSheetsEntity> dateSheetsEntityList) {
+        this.dateSheetsEntityList = dateSheetsEntityList;
     }
 
     @XmlTransient

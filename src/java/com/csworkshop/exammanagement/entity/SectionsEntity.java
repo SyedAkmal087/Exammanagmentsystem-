@@ -7,7 +7,6 @@ package com.csworkshop.exammanagement.entity;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -46,8 +45,6 @@ public class SectionsEntity implements Serializable {
     @Size(min = 1, max = 10)
     @Column(name = "section_name")
     private String sectionName;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "sectionId")
-    private List<ExamsEntity> examsEntityList;
     @OneToMany(mappedBy = "sectionId")
     private List<StudentsEntity> studentsEntityList;
 
@@ -77,15 +74,6 @@ public class SectionsEntity implements Serializable {
 
     public void setSectionName(String sectionName) {
         this.sectionName = sectionName;
-    }
-
-    @XmlTransient
-    public List<ExamsEntity> getExamsEntityList() {
-        return examsEntityList;
-    }
-
-    public void setExamsEntityList(List<ExamsEntity> examsEntityList) {
-        this.examsEntityList = examsEntityList;
     }
 
     @XmlTransient

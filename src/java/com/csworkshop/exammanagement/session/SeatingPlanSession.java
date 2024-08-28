@@ -11,7 +11,7 @@ import javax.ejb.Stateless;
  * @author syeda
  */
 @Stateless
-public class ExamsSession implements ExamsSessionRemote {
+public class SeatingPlanSession implements SeatingPlanSessionRemote {
 
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")

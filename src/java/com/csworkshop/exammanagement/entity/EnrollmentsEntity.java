@@ -96,8 +96,7 @@ public class EnrollmentsEntity implements Serializable {
 
     @Override
     public String toString() {
-    //    return "com.csworkshop.exammanagement.entity.EnrollmentsEntity[ enrollmentId=" + enrollmentId + " ]";
-          return enrollmentId+","+studentId+","+courseId;
+        return "com.csworkshop.exammanagement.entity.EnrollmentsEntity[ enrollmentId=" + enrollmentId + " ]";
     }
     
 }
