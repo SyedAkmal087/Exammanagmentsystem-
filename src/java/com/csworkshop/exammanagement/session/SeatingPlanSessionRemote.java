@@ -11,6 +11,6 @@ import javax.ejb.Remote;
  * @author syeda
  */
 @Remote
-public interface SchedulesSessionRemote {
+public interface SeatingPlanSessionRemote {
     
 }
