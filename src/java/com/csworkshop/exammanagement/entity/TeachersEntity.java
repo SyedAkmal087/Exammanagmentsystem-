@@ -7,7 +7,6 @@ package com.csworkshop.exammanagement.entity;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -65,10 +64,8 @@ public class TeachersEntity implements Serializable {
     private String teacherPassword;
     @Column(name = "availability")
     private Boolean availability;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "teacherId")
-    private List<ExamsEntity> examsEntityList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "teacherId")
-    private List<SchedulesEntity> schedulesEntityList;
+    @OneToMany(mappedBy = "teachersId")
+    private List<SeatingPlanEntity> seatingPlanEntityList;
 
     public TeachersEntity() {
     }
@@ -133,21 +130,12 @@ public class TeachersEntity implements Serializable {
     }
 
     @XmlTransient
-    public List<ExamsEntity> getExamsEntityList() {
-        return examsEntityList;
+    public List<SeatingPlanEntity> getSeatingPlanEntityList() {
+        return seatingPlanEntityList;
     }
 
-    public void setExamsEntityList(List<ExamsEntity> examsEntityList) {
-        this.examsEntityList = examsEntityList;
-    }
-
-    @XmlTransient
-    public List<SchedulesEntity> getSchedulesEntityList() {
-        return schedulesEntityList;
-    }
-
-    public void setSchedulesEntityList(List<SchedulesEntity> schedulesEntityList) {
-        this.schedulesEntityList = schedulesEntityList;
+    public void setSeatingPlanEntityList(List<SeatingPlanEntity> seatingPlanEntityList) {
+        this.seatingPlanEntityList = seatingPlanEntityList;
     }
 
     @Override
