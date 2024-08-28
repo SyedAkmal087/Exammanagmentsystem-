@@ -9,7 +9,7 @@ import com.csworkshop.exammanagement.exceptions.StudentRecordAlreadyExistExcepti
 import com.csworkshop.exammanagement.exceptions.NullStudentRollNoException;
 import com.csworkshop.exammanagement.exceptions.NullStudentBatchNoException;
 import com.csworkshop.exammanagement.exceptions.InvalidStudentIdException;
-import com.csworkshop.exammanagement.exceptions.InvalidOldPasswordException;
+import com.csworkshop.exammanagement.exceptions.InvalidStudentOldPasswordException;
 import com.csworkshop.exammanagement.exceptions.WeakStudentPasswordException;
 import com.csworkshop.exammanagement.entity.StudentsEntity;
 import com.csworkshop.exammanagement.exceptions.InvalidEmailException;
@@ -34,7 +34,7 @@ public interface StudentsSessionRemote {
               public StudentsEntity DeleteStudentById(int studentId) throws StudentNotFoundException,InvalidStudentIdException;
               
         public StudentsEntity UpdateStudentPassword(int studentId,String oldPassword,String newPassword)
-                throws StudentNotFoundException,InvalidOldPasswordException,WeakStudentPasswordException,InvalidStudentIdException;
+                throws StudentNotFoundException,InvalidStudentOldPasswordException,WeakStudentPasswordException,InvalidStudentIdException;
        
         public StudentsEntity addStudent(String studentName,String batchNo,String RollNo,String email,String Password,int sectionId)
         throws  NullStudentNameException,NullStudentBatchNoException,NullStudentRollNoException,StudentRecordAlreadyExistException,InvalidStudentNameLengthException,SectionNotFoundException,InvalidEmailException,WeakStudentPasswordException,InvalidSectionIdException;
