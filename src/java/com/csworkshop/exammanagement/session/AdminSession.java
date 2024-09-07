@@ -17,6 +17,7 @@ import com.csworkshop.exammanagement.exceptions.NullAdminNameException;
 import com.csworkshop.exammanagement.exceptions.InvalidAdminIdException;
 import com.csworkshop.exammanagement.exceptions.AdminNotFoundException;
 import com.csworkshop.exammanagement.entity.AdminEntity;
+import com.csworkshop.exammanagement.exceptions.NullAdminPasswordException;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -27,6 +28,7 @@ import javax.persistence.PersistenceContext;
 
 
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 /**
  *
@@ -193,7 +195,47 @@ qry.setParameter("adminPhoneNumber", adminPhoneNumber);
             throw new AdminNotUpdatedException("Update Failed!");
         }
         em.merge(admin);
+       
     }
+    
+    @Override
+public AdminEntity findAdminByEmailAndPassword(String email, String password)
+        throws AdminNotFoundException, NullAdminEmailException, InvalidAdminEmailException, NullAdminPasswordException, WeakAdminPasswordException {
+
+
+    if (email == null || email.isEmpty()) {
+        throw new NullAdminEmailException("Please Enter Email");
+    }
+    if (!email.matches("^[A-Za-z0-9+_.-]+@uog\\.edu\\.pk$")) {
+        throw new InvalidAdminEmailException("Invalid Email Format");
+    }
+
+    
+    if (password == null || password.isEmpty()) {
+        throw new NullAdminPasswordException("Please Enter Password");
+    }
+    
+    if (!isValidPassword(password)) {
+        throw new WeakAdminPasswordException("Password does not meet the strength requirements (must be 8 characters long)");
+    }
+
+    TypedQuery<AdminEntity> qry = em.createQuery(
+        "SELECT a FROM AdminEntity a WHERE a.adminEmail = :email AND a.adminPassword = :password",
+        AdminEntity.class
+    );
+    qry.setParameter("email", email);
+    qry.setParameter("password", password);
+
+    // Retrieve the admin entity
+    AdminEntity admin;
+    try {
+        admin = qry.getSingleResult();
+    } catch (NoResultException e) {
+        throw new AdminNotFoundException("Invalid login, please try again ");
+    }
+
+    return admin;
+}
     public void persist(Object object) {
         em.persist(object);
     }

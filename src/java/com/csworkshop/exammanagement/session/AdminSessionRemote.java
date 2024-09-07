@@ -15,6 +15,7 @@ import com.csworkshop.exammanagement.exceptions.InvalidAdminNameLengthException;
 import com.csworkshop.exammanagement.exceptions.InvalidAdminPhoneNoException;
 import com.csworkshop.exammanagement.exceptions.NullAdminEmailException;
 import com.csworkshop.exammanagement.exceptions.NullAdminNameException;
+import com.csworkshop.exammanagement.exceptions.NullAdminPasswordException;
 import com.csworkshop.exammanagement.exceptions.NullAdminPhoneNoException;
 import com.csworkshop.exammanagement.exceptions.WeakAdminPasswordException;
 import java.util.List;
@@ -41,4 +42,6 @@ public interface AdminSessionRemote {
     throws InvalidAdminIdException, NullAdminNameException, InvalidAdminNameLengthException, NullAdminPhoneNoException, InvalidAdminPhoneNoException,
             NullAdminEmailException, InvalidAdminEmailException, WeakAdminPasswordException, AdminNotFoundException,
             AdminNotUpdatedException ;
+
+    public AdminEntity findAdminByEmailAndPassword(String email, String password) throws AdminNotFoundException, NullAdminEmailException, InvalidAdminEmailException, NullAdminPasswordException, WeakAdminPasswordException;
 }
