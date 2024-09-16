@@ -111,6 +111,32 @@ public class StudentsSession implements StudentsSessionRemote {
         }
         return students;
     }
+    
+    @Override
+    public StudentsEntity findStudentByEmailAndPassword(String email, String password)
+        throws StudentNotFoundException, InvalidStudentEmailException, NullStudentEmailException, NullStudentPasswordException {
+    if (email == null || email.isEmpty()) {
+        throw new NullStudentEmailException("Please Enter Email");
+    }
+    if (password == null || password.isEmpty()) {
+        throw new NullStudentPasswordException("Please Enter Password");
+    }
+    if (!email.matches("^[A-Za-z0-9+_.-]+@uog\\.edu\\.pk$")) {
+        throw new InvalidStudentEmailException("Invalid Email format");
+    }
+    Query qry = em.createQuery("SELECT s FROM StudentsEntity s WHERE s.email = :email AND s.password = :password");
+    qry.setParameter("email", email);
+    qry.setParameter("password", password);
+
+    StudentsEntity student;
+    try {
+        student = (StudentsEntity) qry.getSingleResult();
+    } catch (NoResultException e) {
+        throw new StudentNotFoundException("No student found with provided email and password");
+    }
+
+    return student;
+}
 
     @Override
     public StudentsEntity findStudentRecordByRollNumber(String rollNo)

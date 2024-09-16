@@ -51,5 +51,7 @@ public interface StudentsSessionRemote {
     public StudentsEntity findStudentById(int studentId) throws StudentNotFoundException, InvalidStudentIdException;
 
     public StudentsEntity addStudent(String studentName, String batchNo, String rollNo, String email, String password, int sectionId) throws NullStudentNameException, InvalidStudentNameLengthException, NullStudentRollNoException, NullStudentEmailException, InvalidStudentEmailException, NullStudentBatchNoException, NullStudentPasswordException, WeakStudentPasswordException, InvalidSectionIdException, SectionNotFoundException, StudentRecordAlreadyExistException;
+
+    public StudentsEntity findStudentByEmailAndPassword(String email, String password) throws StudentNotFoundException, InvalidStudentEmailException, NullStudentEmailException, NullStudentPasswordException;
        
 }
