@@ -34,8 +34,7 @@ public interface AdminSessionRemote {
             throws NullAdminNameException, InvalidAdminNameLengthException, NullAdminPhoneNoException, InvalidAdminPhoneNoException,
             NullAdminEmailException, InvalidAdminEmailException, WeakAdminPasswordException,
             AdminAlreadyExistsException;
-     public  AdminEntity findAdminByEmailandPhoneNumber(String adminEmail, String adminPhoneNumber)throws AdminNotFoundException;
-      
+     public  AdminEntity findAdminByEmailandPhoneNumber(String adminEmail, String adminPhoneNumber);
     public void deleteAdminById(int adminId)throws InvalidAdminIdException, AdminNotFoundException ;
    
     public void updateAdmin(int adminId, String newAdminName, String newEmail, String newPhoneNo, String newPassword)
