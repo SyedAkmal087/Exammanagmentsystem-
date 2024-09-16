@@ -8,8 +8,8 @@ package com.csworkshop.exammanagement.exceptions.ExceptionsForDateSheets;
  *
  * @author syeda
  */
-public class StartingHourInvalidException extends Exception{
-    public StartingHourInvalidException(String Msg)
+public class StartingtimeNullException extends Exception{
+    public StartingtimeNullException(String Msg)
     {
         super(Msg);
     }
