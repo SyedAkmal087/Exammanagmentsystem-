@@ -13,6 +13,7 @@ import com.csworkshop.exammanagement.exceptions.InvalidAdminNameLengthException;
 import com.csworkshop.exammanagement.exceptions.InvalidAdminPhoneNoException;
 import com.csworkshop.exammanagement.exceptions.NullAdminEmailException;
 import com.csworkshop.exammanagement.exceptions.NullAdminNameException;
+import com.csworkshop.exammanagement.exceptions.NullAdminPasswordException;
 import com.csworkshop.exammanagement.exceptions.NullAdminPhoneNoException;
 import com.csworkshop.exammanagement.exceptions.WeakAdminPasswordException;
 import java.util.List;
@@ -35,12 +36,17 @@ public interface AdminSessionRemote {
             throws NullAdminNameException, InvalidAdminNameLengthException, NullAdminPhoneNoException, InvalidAdminPhoneNoException,
             NullAdminEmailException, InvalidAdminEmailException, WeakAdminPasswordException,
             AdminAlreadyExistsException;
-    public AdminEntity findAdminByEmailandPhoneNumber(String adminEmail, String adminPhoneNumber) throws AdminNotFoundException;
 
-    public void deleteAdminById(int adminId) throws InvalidAdminIdException, AdminNotFoundException;
+     public  AdminEntity findAdminByEmailandPhoneNumber(String adminEmail, String adminPhoneNumber);
+    public void deleteAdminById(int adminId)throws InvalidAdminIdException, AdminNotFoundException ;
+   
 
     public void updateAdmin(int adminId, String newAdminName, String newEmail, String newPhoneNo, String newPassword)
             throws InvalidAdminIdException, NullAdminNameException, InvalidAdminNameLengthException, NullAdminPhoneNoException, InvalidAdminPhoneNoException,
             NullAdminEmailException, InvalidAdminEmailException, WeakAdminPasswordException, AdminNotFoundException,
-            AdminNotUpdatedException;
+
+            AdminNotUpdatedException ;
+
+    public AdminEntity findAdminByEmailAndPassword(String email, String password) throws AdminNotFoundException, NullAdminEmailException, InvalidAdminEmailException, NullAdminPasswordException, WeakAdminPasswordException;
+
 }
