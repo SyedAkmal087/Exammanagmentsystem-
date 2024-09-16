@@ -36,11 +36,14 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "DateSheetsEntity.findAll", query = "SELECT d FROM DateSheetsEntity d"),
     @NamedQuery(name = "DateSheetsEntity.findById", query = "SELECT d FROM DateSheetsEntity d WHERE d.id = :id"),
     @NamedQuery(name = "DateSheetsEntity.findByExamDate", query = "SELECT d FROM DateSheetsEntity d WHERE d.examDate = :examDate"),
+    @NamedQuery(name = "DateSheetsEntity.findByCourseCode", query = "SELECT d FROM DateSheetsEntity d WHERE d.courseCode.courseCode = :courseCode"),
     @NamedQuery(name = "DateSheetsEntity.findByCourseDesc", query = "SELECT d FROM DateSheetsEntity d WHERE d.courseDesc = :courseDesc"),
     @NamedQuery(name = "DateSheetsEntity.findByStartingHour", query = "SELECT d FROM DateSheetsEntity d WHERE d.startingHour = :startingHour"),
     @NamedQuery(name = "DateSheetsEntity.findByStartingMinutes", query = "SELECT d FROM DateSheetsEntity d WHERE d.startingMinutes = :startingMinutes"),
     @NamedQuery(name = "DateSheetsEntity.findByEndingHour", query = "SELECT d FROM DateSheetsEntity d WHERE d.endingHour = :endingHour"),
-    @NamedQuery(name = "DateSheetsEntity.findByEndingMinutes", query = "SELECT d FROM DateSheetsEntity d WHERE d.endingMinutes = :endingMinutes")})
+    @NamedQuery(name = "DateSheetsEntity.findByEndingMinutes", query = "SELECT d FROM DateSheetsEntity d WHERE d.endingMinutes = :endingMinutes"),
+    @NamedQuery(name = "DateSheetsEntity.findByStartingHoursAndMinutes", query = "SELECT d FROM DateSheetsEntity d WHERE d.startingHour = :startingHour and d.startingMinutes = :startingMinutes"),
+    @NamedQuery(name = "DateSheetsEntity.findByEndingHoursAndMinutes", query = "SELECT d FROM DateSheetsEntity d WHERE d.endingHour = :endingHour and d.endingMinutes = :endingMinutes")})
 public class DateSheetsEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -56,13 +59,13 @@ public class DateSheetsEntity implements Serializable {
     @Column(name = "course_desc")
     private String courseDesc;
     @Column(name = "starting_hour")
-    private Short startingHour;
+    private Integer startingHour;
     @Column(name = "starting_minutes")
-    private Short startingMinutes;
+    private Integer startingMinutes;
     @Column(name = "ending_hour")
-    private Short endingHour;
+    private Integer endingHour;
     @Column(name = "ending_minutes")
-    private Short endingMinutes;
+    private Integer endingMinutes;
     @OneToMany(mappedBy = "dateSheetId")
     private List<SeatingPlanEntity> seatingPlanEntityList;
     @JoinColumn(name = "course_code", referencedColumnName = "course_code")
@@ -100,35 +103,35 @@ public class DateSheetsEntity implements Serializable {
         this.courseDesc = courseDesc;
     }
 
-    public Short getStartingHour() {
+    public Integer getStartingHour() {
         return startingHour;
     }
 
-    public void setStartingHour(Short startingHour) {
+    public void setStartingHour(Integer startingHour) {
         this.startingHour = startingHour;
     }
 
-    public Short getStartingMinutes() {
+    public Integer getStartingMinutes() {
         return startingMinutes;
     }
 
-    public void setStartingMinutes(Short startingMinutes) {
+    public void setStartingMinutes(Integer startingMinutes) {
         this.startingMinutes = startingMinutes;
     }
 
-    public Short getEndingHour() {
+    public Integer getEndingHour() {
         return endingHour;
     }
 
-    public void setEndingHour(Short endingHour) {
+    public void setEndingHour(Integer endingHour) {
         this.endingHour = endingHour;
     }
 
-    public Short getEndingMinutes() {
+    public Integer getEndingMinutes() {
         return endingMinutes;
     }
 
-    public void setEndingMinutes(Short endingMinutes) {
+    public void setEndingMinutes(Integer endingMinutes) {
         this.endingMinutes = endingMinutes;
     }
 

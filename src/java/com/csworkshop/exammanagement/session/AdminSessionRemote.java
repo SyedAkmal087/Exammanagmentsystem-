@@ -3,8 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/J2EE/EJB30/SessionLocal.java to edit this template
  */
 package com.csworkshop.exammanagement.session;
-
-
 import com.csworkshop.exammanagement.exceptions.AdminAlreadyExistsException;
 import com.csworkshop.exammanagement.exceptions.InvalidAdminIdException;
 import com.csworkshop.exammanagement.exceptions.AdminNotFoundException;
@@ -27,20 +25,28 @@ import javax.ejb.Remote;
  */
 @Remote
 public interface AdminSessionRemote {
-     public AdminEntity findAdminById(int adminId) throws AdminNotFoundException,InvalidAdminIdException;
-    public List<AdminEntity> findAdminByName(String adminName) throws AdminNotFoundException,NullAdminNameException,InvalidAdminNameLengthException;
- public List<AdminEntity> GetAllAdminsData() ;
-     public AdminEntity AddAdmin(String name, String email, String phoneNum, String password)
+
+    public AdminEntity findAdminById(int adminId) throws AdminNotFoundException, InvalidAdminIdException;
+
+    public List<AdminEntity> findAdminByName(String adminName) throws AdminNotFoundException, NullAdminNameException, InvalidAdminNameLengthException;
+
+    public List<AdminEntity> GetAllAdminsData();
+
+    public AdminEntity AddAdmin(String name, String email, String phoneNum, String password)
             throws NullAdminNameException, InvalidAdminNameLengthException, NullAdminPhoneNoException, InvalidAdminPhoneNoException,
             NullAdminEmailException, InvalidAdminEmailException, WeakAdminPasswordException,
             AdminAlreadyExistsException;
+
      public  AdminEntity findAdminByEmailandPhoneNumber(String adminEmail, String adminPhoneNumber);
     public void deleteAdminById(int adminId)throws InvalidAdminIdException, AdminNotFoundException ;
    
+
     public void updateAdmin(int adminId, String newAdminName, String newEmail, String newPhoneNo, String newPassword)
-    throws InvalidAdminIdException, NullAdminNameException, InvalidAdminNameLengthException, NullAdminPhoneNoException, InvalidAdminPhoneNoException,
+            throws InvalidAdminIdException, NullAdminNameException, InvalidAdminNameLengthException, NullAdminPhoneNoException, InvalidAdminPhoneNoException,
             NullAdminEmailException, InvalidAdminEmailException, WeakAdminPasswordException, AdminNotFoundException,
+
             AdminNotUpdatedException ;
 
     public AdminEntity findAdminByEmailAndPassword(String email, String password) throws AdminNotFoundException, NullAdminEmailException, InvalidAdminEmailException, NullAdminPasswordException, WeakAdminPasswordException;
+
 }
