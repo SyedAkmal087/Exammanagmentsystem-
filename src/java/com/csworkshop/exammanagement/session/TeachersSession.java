@@ -39,8 +39,6 @@ public class TeachersSession implements TeachersSessionRemote {
     @PersistenceContext(unitName = "exammanagmentPU")
     private EntityManager em;
 
-   
-
     @Override
     public TeachersEntity addTeacher(String name, String phone_num, String email, String password, boolean availability)
             throws NullTeacherNameException, InvalidTeacherNameException, NullTeacherPhoneNoException, InvalidTeacherPhoneNoException,
@@ -48,32 +46,36 @@ public class TeachersSession implements TeachersSessionRemote {
             TeacherAlreadyExistsException {
 
         validateInputs(name, phone_num, email, password, availability);
-TeachersEntity teacher = new TeachersEntity();
-        try {
-            if (doesTeacherWithEmailandPhoneNumberExist(email, phone_num)) {
-                throw new TeacherAlreadyExistsException("Teacher already exists.");
-            }
-        } catch (TeacherNotFoundException ex) {
-        teacher.setTeacherName(name);
-        teacher.setTeacherPhoneNumber(phone_num);
-        teacher.setTeacherEmail(email);
-        teacher.setTeacherPassword(password);
-        teacher.setAvailability(availability);
-        persist(teacher);
+        TeachersEntity teacher = new TeachersEntity();
+        TeachersEntity existingTeacher = findTeacherRecordByPhoneNumber(phone_num);
+        if (existingTeacher != null) {
+            throw new TeacherAlreadyExistsException("Teacher Already Exist With The Phone Number " + phone_num);
+
+        }
+        existingTeacher = findTeacherRecordByEmail(email);
+        if (existingTeacher != null) {
+            throw new TeacherAlreadyExistsException("Teacher Already Exist With The Email " + email);
+
+        } else {
+            teacher.setTeacherName(name);
+            teacher.setTeacherPhoneNumber(phone_num);
+            teacher.setTeacherEmail(email);
+            teacher.setTeacherPassword(password);
+            teacher.setAvailability(availability);
+            persist(teacher);
         }
         return teacher;
     }
 
-    private boolean doesTeacherWithEmailandPhoneNumberExist(String email, String phone_num) throws TeacherNotFoundException{
-        TeachersEntity existingTeacher;
-        try {
-            existingTeacher = findTeacherByEmailandPhoneNumber(email, phone_num);
-        } catch (TeacherNotFoundException ex) {
-            throw new TeacherNotFoundException("no teacher found ");
-        }
-        return existingTeacher != null;
-    }
-
+//    private boolean doesTeacherWithEmailandPhoneNumberExist(String email, String phone_num) throws TeacherNotFoundException {
+//        TeachersEntity existingTeacher;
+//        try {
+//            existingTeacher = findTeacherByEmailandPhoneNumber(email, phone_num);
+//        } catch (TeacherNotFoundException ex) {
+//            throw new TeacherNotFoundException("no teacher found ");
+//        }
+//        return existingTeacher != null;
+//    }
     @Override
     public TeachersEntity findTeacherByEmailandPhoneNumber(String teacherEmail, String teacherPhoneNumber) throws TeacherNotFoundException {
         //  named query to find a teacher by email and phone number
@@ -178,40 +180,85 @@ TeachersEntity teacher = new TeachersEntity();
     }
 
     @Override
-    public void updateTeacher(int teacherId, String newTeacherName, String newPhone_no, String newEmail, String newPassword, boolean avail)
+    public TeachersEntity findTeacherRecordByPhoneNumber(String teacherPhoneNumber) {
+        Query qry = em.createQuery("SELECT t from TeachersEntity t WHERE t.teacherPhoneNumber= :teacherPhoneNumber");
+        qry.setParameter("teacherPhoneNumber", teacherPhoneNumber);
+
+        try {
+            return (TeachersEntity) qry.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public TeachersEntity findTeacherRecordByEmail(String teacherEmail) {
+        Query qry = em.createQuery("SELECT t from TeachersEntity t WHERE t.teacherEmail= :teacherEmail");
+        qry.setParameter("teacherEmail", teacherEmail);
+
+        try {
+            return (TeachersEntity) qry.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public TeachersEntity updateTeacher(int teacherId, String newTeacherName, String newPhone_no, String newEmail, String newPassword, boolean avail)
             throws InvalidTeacherIdException, NullTeacherNameException, InvalidTeacherNameException, NullTeacherPhoneNoException, InvalidTeacherPhoneNoException,
             NullTeacherEmailException, InvalidTeacherEmailException, NullTeacherPasswordException, WeakTeacherPasswordException, TeacherNotFoundException,
-            TeacherNotUpdatedException {
+            TeacherNotUpdatedException, TeacherAlreadyExistsException {
         // Validate the teacher ID
         if (teacherId <= 0) {
             throw new InvalidTeacherIdException("ID cannot be zero.");
         }
         validateInputs(newTeacherName, newPhone_no, newEmail, newPassword, avail);
         TeachersEntity teacher = findTeacherbyId(teacherId);
+        
+//        boolean isUpdated = false;
+//        if (newTeacherName != null && !newTeacherName.isEmpty()) {
+//            teacher.setTeacherName(newTeacherName);
+//            isUpdated = true;
+//        }
+//        if (newPhone_no != null && !newPhone_no.isEmpty()) {
+//            teacher.setTeacherPhoneNumber(newPhone_no);
+//            isUpdated = true;
+//        }
+//        if (newEmail != null && !newEmail.isEmpty()) {
+//            teacher.setTeacherEmail(newEmail);
+//            isUpdated = true;
+//        }
+//        if (newPassword != null && !newPassword.isEmpty()) {
+//            teacher.setTeacherPassword(newPassword);
+//            isUpdated = true;
+//        }
+        TeachersEntity existingTeacher = findTeacherRecordByPhoneNumber(newPhone_no);
+        if (existingTeacher != null) {
+            throw new TeacherAlreadyExistsException("Teacher Already Exist With The Phone Number " + newPhone_no);
+
+        }
+        existingTeacher = findTeacherRecordByEmail(newEmail);
+        if (existingTeacher != null) {
+            throw new TeacherAlreadyExistsException("Teacher Already Exist With The Email " + newEmail);
+
+        } 
+        else {
+
+            teacher.setTeacherName(newTeacherName);
+            teacher.setTeacherPhoneNumber(newPhone_no);
+            teacher.setTeacherEmail(newEmail);
+            teacher.setTeacherPassword(newPassword);
+            teacher.setAvailability(avail);
+        }
+        em.merge(teacher);
         if (teacher == null) {
             throw new TeacherNotFoundException("Teacher not found with ID: " + teacherId);
         }
-        boolean isUpdated = false;
-        if (newTeacherName != null && !newTeacherName.isEmpty()) {
-            teacher.setTeacherName(newTeacherName);
-            isUpdated = true;
-        }
-        if (newPhone_no != null && !newPhone_no.isEmpty()) {
-            teacher.setTeacherPhoneNumber(newPhone_no);
-            isUpdated = true;
-        }
-        if (newEmail != null && !newEmail.isEmpty()) {
-            teacher.setTeacherEmail(newEmail);
-            isUpdated = true;
-        }
-        if (newPassword != null && !newPassword.isEmpty()) {
-            teacher.setTeacherPassword(newPassword);
-            isUpdated = true;
-        }
-        if (!isUpdated) {
-            throw new TeacherNotUpdatedException("Update Failed!");
-        }
-        em.merge(teacher);
+//        if (!isUpdated) {
+//            throw new TeacherNotUpdatedException("Update Failed!");
+//        }
+        return teacher;
+
     }
 
     @Override
@@ -230,35 +277,34 @@ TeachersEntity teacher = new TeachersEntity();
         // Return the list of teachers
         return teachers;
     }
-     private boolean isValidPassword(String password) {    
-    return password != null && password.length() >= 8; // Example rule  
-}  
- @Override
-        public TeachersEntity UpdateTeacherPassword(int teacherId, String oldPassword,String newPassword) 
-                throws TeacherNotFoundException,InvalidTeacherOldPasswordException,WeakTeacherPasswordException,InvalidTeacherIdException{
-            TeachersEntity teacher=findTeacherbyId(teacherId);
-        if(teacher!=null){
-            
-         if (!teacher.getTeacherPassword().equals(oldPassword)) {  
-            throw new InvalidTeacherOldPasswordException("Old password is incorrect for Student ID: " + teacherId);  
-        } 
-         if (!isValidPassword(newPassword)) {  
-            throw new WeakTeacherPasswordException("New password does not meet the strength requirements.");  
-        }
+
+    private boolean isValidPassword(String password) {
+        return password != null && password.length() >= 8; // Example rule  
+    }
+
+    @Override
+    public TeachersEntity UpdateTeacherPassword(int teacherId, String oldPassword, String newPassword)
+            throws TeacherNotFoundException, InvalidTeacherOldPasswordException, WeakTeacherPasswordException, InvalidTeacherIdException {
+        TeachersEntity teacher = findTeacherbyId(teacherId);
+        if (teacher != null) {
+
+            if (!teacher.getTeacherPassword().equals(oldPassword)) {
+                throw new InvalidTeacherOldPasswordException("Old password is incorrect for Student ID: " + teacherId);
+            }
+            if (!isValidPassword(newPassword)) {
+                throw new WeakTeacherPasswordException("New password does not meet the strength requirements.");
+            }
             teacher.setTeacherPassword(newPassword);
             em.merge(teacher);
+        } else {
+            throw new TeacherNotFoundException("No Student Found With ID: " + teacherId);
+
         }
-        else{
-            throw new TeacherNotFoundException("No Student Found With ID: "+teacherId);
-            
-        }
-    return teacher;
+        return teacher;
     }
-  
 
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
-
     public void persist(Object object) {
         em.persist(object);
     }
