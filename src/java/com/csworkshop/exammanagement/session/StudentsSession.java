@@ -71,11 +71,18 @@ public class StudentsSession implements StudentsSessionRemote {
         } else if (!isValidPassword(password)) {
             throw new WeakStudentPasswordException("Password does not meet the strength requirements");
         }
-        StudentsEntity existingStudent = null;
-        try {
-            existingStudent = findStudentRecordByRollNumber(rollNo);
-            throw new StudentRecordAlreadyExistException("Student Already Exist With The Roll Number " + rollNo);
-        } catch (StudentNotFoundException ex) {
+        
+        StudentsEntity existingStudent=findStudentRecordByRollNumber(rollNo);
+      if(existingStudent!=null){
+           throw new StudentRecordAlreadyExistException("Student Already Exist With The Roll Number " + rollNo);
+     
+      }
+      existingStudent=findStudentRecordByEmail(email);
+      if(existingStudent!=null){
+           throw new StudentRecordAlreadyExistException("Student Already Exist With The Email " + email);
+   
+      }
+      else{
             student.setStudentName(studentName);
             student.setBatchNo(batchNo);
             student.setRollNo(rollNo);
@@ -84,9 +91,38 @@ public class StudentsSession implements StudentsSessionRemote {
             SectionsEntity section = sectionManager.findSectionById(sectionId);
             student.setSectionId(section);
             persist(student);
-        }
+      }
         return student;
     }
+
+    @Override
+    public StudentsEntity findStudentRecordByEmail(String email)  {
+    Query qry = em.createQuery("SELECT s FROM StudentsEntity s WHERE s.email = :email");
+    qry.setParameter("email", email);
+
+    
+    try {
+       return (StudentsEntity) qry.getSingleResult();
+    } catch (NoResultException e) {
+        return null;
+    }
+
+
+}
+
+   @Override
+    public StudentsEntity findStudentRecordByRollNumber(String rollNo)
+            {
+        Query qry = em.createQuery("SELECT s From StudentsEntity s WHERE s.rollNo= :rollNo");
+        qry.setParameter("rollNo", rollNo);
+        
+        try {
+            return (StudentsEntity) qry.getSingleResult();
+        } catch (NoResultException e) {
+           return null;
+        }
+}
+
 
     @Override
     public StudentsEntity findStudentById(int studentId) throws StudentNotFoundException, InvalidStudentIdException {
@@ -137,22 +173,6 @@ public class StudentsSession implements StudentsSessionRemote {
 
     return student;
 }
-
-    @Override
-    public StudentsEntity findStudentRecordByRollNumber(String rollNo)
-            throws StudentNotFoundException {
-        Query qry = em.createQuery("select s from StudentsEntity s where s.rollNo=:rollNo");
-        qry.setParameter("rollNo", rollNo);
-        StudentsEntity student;
-        try {
-            student = (StudentsEntity) qry.getSingleResult();
-        } catch (NoResultException e) {
-
-            throw new StudentNotFoundException("No Student found with Roll Number: " + rollNo);
-        }
-
-        return student;
-    }
 
     @Override
     public List<StudentsEntity> findStudentsBySectionAndBatchNo(Integer sectionId, String batchNumber) throws StudentNotFoundException {
@@ -213,7 +233,8 @@ public class StudentsSession implements StudentsSessionRemote {
 
     @Override
     public StudentsEntity updateStudentRecord(int studentId, String studentName, String batchNo, String rollNo, String email, String password, int sectionId)
-            throws NullStudentNameException, NullStudentBatchNoException, NullStudentRollNoException, WeakStudentPasswordException, StudentNotFoundException, InvalidStudentIdException, InvalidStudentNameLengthException, SectionNotFoundException, NullStudentRollNoException, InvalidSectionIdException, InvalidStudentEmailException {
+            throws NullStudentNameException, NullStudentBatchNoException, NullStudentRollNoException, WeakStudentPasswordException, StudentNotFoundException, InvalidStudentIdException, InvalidStudentNameLengthException, SectionNotFoundException, NullStudentRollNoException, InvalidSectionIdException, InvalidStudentEmailException
+    ,StudentRecordAlreadyExistException{
 
         StudentsEntity student = findStudentById(studentId);
         if (student != null) {
@@ -232,7 +253,17 @@ public class StudentsSession implements StudentsSessionRemote {
             if (!isValidPassword(password) || password.isEmpty()) {
                 throw new WeakStudentPasswordException("Password does not meet the strength requirements");
             }
-
+      StudentsEntity existingStudent=findStudentRecordByRollNumber(rollNo);
+      if(existingStudent!=null){
+           throw new StudentRecordAlreadyExistException("Student Already Exist With The Roll Number " + rollNo);
+     
+      }
+      existingStudent=findStudentRecordByEmail(email);
+      if(existingStudent!=null){
+           throw new StudentRecordAlreadyExistException("Student Already Exist With The Email " + email);
+   
+      }
+      else{
             student.setStudentName(studentName);
             student.setBatchNo(batchNo);
             student.setEmail(email);
@@ -241,9 +272,9 @@ public class StudentsSession implements StudentsSessionRemote {
 
             SectionsEntity section = sectionManager.findSectionById(sectionId);
             student.setSectionId(section);
-
+      }
             em.merge(student);
-        } else {
+        }if(student==null){
             throw new StudentNotFoundException("No Student Found with ID: " + studentId);
         }
         return student;

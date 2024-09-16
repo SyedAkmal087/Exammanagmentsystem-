@@ -186,7 +186,6 @@ public class CoursesSession implements CoursesSessionRemote {
     }
 
     @Override
-    @Transactional
     public void removeCourseByNameAndCode(String courseName, String courseCode)
             throws InvalidCourseNameException, InvalidCourseCodeException, CourseNotFoundException {
 
@@ -278,9 +277,5 @@ public class CoursesSession implements CoursesSessionRemote {
 
     public void persist(Object object) {
         em.persist(object);
-    }
-
-    public void persist1(Object object) {
-        em.persist(object);
-    }
+    }   
 }

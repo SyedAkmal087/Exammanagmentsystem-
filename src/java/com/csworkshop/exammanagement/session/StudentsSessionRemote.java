@@ -36,7 +36,7 @@ public interface StudentsSessionRemote {
 
     public StudentsEntity updateStudentPassword(int studentId, String oldPassword, String newPassword) throws StudentNotFoundException, InvalidOldPasswordException, WeakStudentPasswordException, InvalidStudentIdException;
 
-    public StudentsEntity updateStudentRecord(int studentId, String studentName, String batchNo, String rollNo, String email, String password, int sectionId) throws NullStudentNameException, NullStudentBatchNoException, NullStudentRollNoException, WeakStudentPasswordException, StudentNotFoundException, InvalidStudentIdException, InvalidStudentNameLengthException, SectionNotFoundException, NullStudentRollNoException, InvalidSectionIdException, InvalidStudentEmailException;
+    public StudentsEntity updateStudentRecord(int studentId, String studentName, String batchNo, String rollNo, String email, String password, int sectionId) throws StudentRecordAlreadyExistException,NullStudentNameException, NullStudentBatchNoException, NullStudentRollNoException, WeakStudentPasswordException, StudentNotFoundException, InvalidStudentIdException, InvalidStudentNameLengthException, SectionNotFoundException, NullStudentRollNoException, InvalidSectionIdException, InvalidStudentEmailException;
 
     public List<StudentsEntity> findStudentByName(String studentName) throws StudentNotFoundException, NullStudentNameException, InvalidStudentNameLengthException;
 
@@ -50,8 +50,12 @@ public interface StudentsSessionRemote {
 
     public StudentsEntity findStudentById(int studentId) throws StudentNotFoundException, InvalidStudentIdException;
 
-    public StudentsEntity addStudent(String studentName, String batchNo, String rollNo, String email, String password, int sectionId) throws NullStudentNameException, InvalidStudentNameLengthException, NullStudentRollNoException, NullStudentEmailException, InvalidStudentEmailException, NullStudentBatchNoException, NullStudentPasswordException, WeakStudentPasswordException, InvalidSectionIdException, SectionNotFoundException, StudentRecordAlreadyExistException;
 
-    public StudentsEntity findStudentByEmailAndPassword(String email, String password) throws StudentNotFoundException, InvalidStudentEmailException, NullStudentEmailException, NullStudentPasswordException;
+    public StudentsEntity addStudent(String studentName, String batchNo, String rollNo, String email, String password, int sectionId) throws NullStudentNameException, 
+            InvalidStudentNameLengthException, NullStudentRollNoException, NullStudentEmailException, InvalidStudentEmailException,
+            NullStudentBatchNoException, NullStudentPasswordException, WeakStudentPasswordException, InvalidSectionIdException, SectionNotFoundException,
+            StudentRecordAlreadyExistException,StudentNotFoundException;
+    public StudentsEntity findStudentRecordByEmail(String email) throws StudentNotFoundException ;
+
        
 }
