@@ -302,6 +302,13 @@ public class TeachersSession implements TeachersSessionRemote {
         }
         return teacher;
     }
+    @Override
+    public long TotalTeachers()
+    {
+        
+        return (long) em.createQuery("SELECT COUNT(s) FROM TeachersEntity s").getSingleResult();
+        
+    }
 
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
