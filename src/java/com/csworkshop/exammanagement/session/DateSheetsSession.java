@@ -249,7 +249,13 @@ public class DateSheetsSession implements DateSheetsSessionRemote {
 
         return DseObj;
     }
-
+    @Override
+    public long TotalExams()
+    {
+        
+        return (long) em.createQuery("SELECT COUNT(s) FROM DateSheetsEntity s").getSingleResult();
+        
+    }
     public void persist(Object object) {
         em.persist(object);
     }
