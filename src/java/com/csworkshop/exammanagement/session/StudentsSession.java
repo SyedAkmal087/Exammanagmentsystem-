@@ -330,6 +330,14 @@ public class StudentsSession implements StudentsSessionRemote {
         }
         return true;
     }
+    
+    @Override
+    public long TotalStudents()
+    {
+        
+        return (long) em.createQuery("SELECT COUNT(s) FROM StudentsEntity s").getSingleResult();
+        
+    }
 
     public void persist(Object object) {
         em.persist(object);
