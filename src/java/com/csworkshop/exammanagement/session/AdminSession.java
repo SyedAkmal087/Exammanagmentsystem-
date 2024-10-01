@@ -220,12 +220,11 @@ public class AdminSession implements AdminSessionRemote {
         qry.setParameter("email", email);
         qry.setParameter("password", password);
 
-        // Retrieve the admin entity
         AdminEntity admin;
         try {
             admin = qry.getSingleResult();
         } catch (NoResultException e) {
-            throw new AdminNotFoundException("Invalid login, please try again ");
+            throw new AdminNotFoundException("Invalid login!Please try again");
         }
 
         return admin;

@@ -168,7 +168,7 @@ public class StudentsSession implements StudentsSessionRemote {
     try {
         student = (StudentsEntity) qry.getSingleResult();
     } catch (NoResultException e) {
-        throw new StudentNotFoundException("No student found with provided email and password");
+        throw new StudentNotFoundException("Invalid login!Please try again");
     }
 
     return student;
