@@ -46,7 +46,7 @@ public class DateSheetsSession implements DateSheetsSessionRemote {
     public List<DateSheetsEntity> GetAllExamsData()
             throws EmptyListException {
         List<DateSheetsEntity> DseList;
-        DseList = em.createNativeQuery("DateSheetsEntity.findAll", DateSheetsEntity.class).getResultList();
+        DseList = em.createNamedQuery("DateSheetsEntity.findAll", DateSheetsEntity.class).getResultList();
         if (DseList.isEmpty()) {
             throw new EmptyListException("No record Found...!");
         }
