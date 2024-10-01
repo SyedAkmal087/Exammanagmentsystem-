@@ -46,6 +46,8 @@ public interface TeachersSessionRemote {
     public TeachersEntity findTeacherRecordByPhoneNumber(String teacherPhoneNumber);
 
     public TeachersEntity findTeacherRecordByEmail(String teacherEmail);
+
+    public long TotalTeachers();
        
 
 }

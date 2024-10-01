@@ -50,4 +50,6 @@ public interface DateSheetsSessionRemote {
 
     public DateSheetsEntity updateDateSheet(int dateSheetId, Date ExamDate, String CourseCode, String CourseDesc, int StartingHour, int StartingMinutes, int EndingHour, int EndingMinutes) throws ExamDateNullException, CourseDescNullException, StartingtimeNullException, EndingTimeNullException, StartingTimeInvalidException, EndingTimeInvalidExcption, InvalidCourseCodeException, CourseNotFoundException, EmptyListException;
 
+    public long TotalExams();
+
 }

@@ -57,5 +57,9 @@ public interface StudentsSessionRemote {
             StudentRecordAlreadyExistException,StudentNotFoundException;
     public StudentsEntity findStudentRecordByEmail(String email) throws StudentNotFoundException ;
 
+    public StudentsEntity findStudentByEmailAndPassword(String email, String password) throws StudentNotFoundException, InvalidStudentEmailException, NullStudentEmailException, NullStudentPasswordException;
+
+    public long TotalStudents();
+
        
 }

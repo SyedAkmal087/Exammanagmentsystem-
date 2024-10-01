@@ -168,7 +168,7 @@ public class StudentsSession implements StudentsSessionRemote {
     try {
         student = (StudentsEntity) qry.getSingleResult();
     } catch (NoResultException e) {
-        throw new StudentNotFoundException("No student found with provided email and password");
+        throw new StudentNotFoundException("Invalid login!Please try again");
     }
 
     return student;
@@ -329,6 +329,14 @@ public class StudentsSession implements StudentsSessionRemote {
             return false;
         }
         return true;
+    }
+    
+    @Override
+    public long TotalStudents()
+    {
+        
+        return (long) em.createQuery("SELECT COUNT(s) FROM StudentsEntity s").getSingleResult();
+        
     }
 
     public void persist(Object object) {
