@@ -134,7 +134,7 @@ public class CoursesEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "com.csworkshop.exammanagement.entity.CoursesEntity[ courseId=" + courseId + " ]";
+        return courseCode;
     }
     
 }
