@@ -10,6 +10,7 @@ import com.csworkshop.exammanagement.exceptions.ExceptionsForSeatingPlan.NoExamF
 import com.csworkshop.exammanagement.exceptions.ExceptionsForSeatingPlan.NoExamFoundOnDateException;
 import com.csworkshop.exammanagement.exceptions.ExceptionsForSeatingPlan.NoSeatingPlanForTeacherException;
 import com.csworkshop.exammanagement.exceptions.ExceptionsForSeatingPlan.RoomNotFoundException;
+import com.csworkshop.exammanagement.exceptions.ExceptionsForSeatingPlan.SeatingPlanNotFoundException;
 import com.csworkshop.exammanagement.exceptions.ExceptionsForSeatingPlan.StudentNotFoundException;
 import com.csworkshop.exammanagement.exceptions.ExceptionsForSeatingPlan.TeacherNotFoundException;
 import java.util.Date;
@@ -30,5 +31,7 @@ public interface SeatingPlanSessionRemote {
     public List<SeatingPlanEntity> getSeatingPlanByTeacherId(int teacherId) throws TeacherNotFoundException, NoSeatingPlanForTeacherException;
 
     public List<SeatingPlanEntity> getSeatingPlanByExamDate(Date examDate) throws NoExamFoundOnDateException;
+
+    public List<SeatingPlanEntity> getAllSeatingPlans() throws SeatingPlanNotFoundException;
     
 }
