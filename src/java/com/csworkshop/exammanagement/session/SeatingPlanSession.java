@@ -4,6 +4,7 @@
  */
 package com.csworkshop.exammanagement.session;
 
+import com.csworkshop.exammanagement.exceptions.ExceptionsForSeatingPlan.SeatingPlanNotFoundException;
 import com.csworkshop.exammanagement.entity.DateSheetsEntity;
 import com.csworkshop.exammanagement.entity.RoomsEntity;
 import com.csworkshop.exammanagement.entity.SeatingPlanEntity;
@@ -21,6 +22,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -142,6 +144,17 @@ public class SeatingPlanSession implements SeatingPlanSessionRemote {
         }
 
         return seatingPlans;
+    }
+    
+    
+    @Override
+    public List<SeatingPlanEntity> getAllSeatingPlans() throws SeatingPlanNotFoundException{
+        Query qry = em.createQuery("Select s from SeatingPlanEntity s");
+        List<SeatingPlanEntity> stPlans = qry.getResultList();
+        if (stPlans == null) {
+            throw new SeatingPlanNotFoundException("No seating plan found in DB");
+        }
+        return stPlans;
     }
 
     public void persist(Object object) {
