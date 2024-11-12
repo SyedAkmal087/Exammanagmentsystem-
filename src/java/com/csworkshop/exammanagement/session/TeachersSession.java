@@ -289,7 +289,7 @@ public class TeachersSession implements TeachersSessionRemote {
         if (teacher != null) {
 
             if (!teacher.getTeacherPassword().equals(oldPassword)) {
-                throw new InvalidTeacherOldPasswordException("Old password is incorrect for Student ID: " + teacherId);
+                throw new InvalidTeacherOldPasswordException("Old password is incorrect for Teacher ID: " + teacherId);
             }
             if (!isValidPassword(newPassword)) {
                 throw new WeakTeacherPasswordException("New password does not meet the strength requirements.");
@@ -297,7 +297,7 @@ public class TeachersSession implements TeachersSessionRemote {
             teacher.setTeacherPassword(newPassword);
             em.merge(teacher);
         } else {
-            throw new TeacherNotFoundException("No Student Found With ID: " + teacherId);
+            throw new TeacherNotFoundException("No teacher Found With ID: " + teacherId);
 
         }
         return teacher;
@@ -309,6 +309,31 @@ public class TeachersSession implements TeachersSessionRemote {
         return (long) em.createQuery("SELECT COUNT(s) FROM TeachersEntity s").getSingleResult();
         
     }
+    @Override
+        public TeachersEntity findTeacherByEmailAndPassword(String teacherEmail, String teacherPassword)
+        throws TeacherNotFoundException, InvalidTeacherEmailException, NullTeacherEmailException, NullTeacherPasswordException {
+    if (teacherEmail == null || teacherEmail.isEmpty()) {
+        throw new NullTeacherEmailException("Please Enter Email");
+    }
+    if (teacherPassword == null || teacherPassword.isEmpty()) {
+        throw new NullTeacherPasswordException("Please Enter Password");
+    }
+    if (!teacherEmail.matches("^[A-Za-z0-9+_.-]+@uog\\.edu\\.pk$")) {
+        throw new InvalidTeacherEmailException("Invalid Email format");
+    }
+    Query qry = em.createQuery("SELECT t FROM TeachersEntity t WHERE t.teacherEmail = :teacherEmail AND t.teacherPassword = :teacherPassword");
+    qry.setParameter("teacherEmail", teacherEmail);
+    qry.setParameter("teacherPassword", teacherPassword);
+
+    TeachersEntity teacher;
+    try {
+        teacher = (TeachersEntity) qry.getSingleResult();
+    } catch (NoResultException e) {
+        throw new TeacherNotFoundException("Invalid login!Please try again");
+    }
+
+    return teacher;
+}
 
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")

@@ -62,7 +62,7 @@ public class SectionsSession implements SectionsSessionRemote {
             section = (SectionsEntity) qry.getSingleResult();
         } catch (NoResultException e) {
 
-            throw new SectionNotFoundException("No Room found with Room Number: " + sectionName);
+            throw new SectionNotFoundException("No section found with section name: " + sectionName);
         }
 
         return section;

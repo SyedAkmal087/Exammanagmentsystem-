@@ -48,6 +48,8 @@ public interface TeachersSessionRemote {
     public TeachersEntity findTeacherRecordByEmail(String teacherEmail);
 
     public long TotalTeachers();
+
+    public TeachersEntity findTeacherByEmailAndPassword(String teacherEmail, String teacherPassword) throws TeacherNotFoundException, InvalidTeacherEmailException, NullTeacherEmailException, NullTeacherPasswordException;
        
 
 }
